@@ -27,6 +27,18 @@ export default function App() {
     setTaskList(_taskList => _taskList.filter(_task => _task !== task));
   }
 
+  function updateTaskStatus(task: Task) {
+    setTaskList(_taskList =>
+      _taskList.map(_task => {
+        if (_task === task) {
+          _task.done = !_task.done;
+        }
+
+        return _task;
+      })
+    );
+  }
+
   return (
     <div className="min-w-full min-h-screen p-10 bg-zinc-100 dark:bg-zinc-900 text-black dark:text-white flex">
       <div className="flex-grow md:max-w-[800px] mx-auto flex flex-col gap-8 relativ bg-inherit">
@@ -54,7 +66,12 @@ export default function App() {
         </form>
         <div className="w-full flex flex-col gap-4">
           {taskList.map(task => (
-            <Card key={task.id} task={task} removeTask={removeTask} />
+            <Card
+              key={task.id}
+              task={task}
+              removeTask={removeTask}
+              updateTaskStatus={updateTaskStatus}
+            />
           ))}
         </div>
       </div>
