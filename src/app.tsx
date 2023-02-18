@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import { useAtom } from "jotai";
 import { FormEvent, useState } from "react";
 import { taskAtom } from "./atoms/task";
@@ -65,14 +66,16 @@ export default function App() {
           </button>
         </form>
         <div className="w-full flex flex-col gap-4">
-          {taskList.map(task => (
-            <Card
-              key={task.id}
-              task={task}
-              removeTask={removeTask}
-              updateTaskStatus={updateTaskStatus}
-            />
-          ))}
+          <AnimatePresence>
+            {taskList.map(task => (
+              <Card
+                key={task.id}
+                task={task}
+                removeTask={removeTask}
+                updateTaskStatus={updateTaskStatus}
+              />
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </div>

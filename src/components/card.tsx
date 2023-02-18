@@ -1,4 +1,5 @@
 import { Task } from "../types";
+import { motion } from "framer-motion";
 
 interface Props {
   task: Task;
@@ -8,14 +9,26 @@ interface Props {
 
 export default function Card({ task, removeTask, updateTaskStatus }: Props) {
   return (
-    <div className="w-full flex justify-between bg-white dark:bg-black p-4 rounded-md shadow-sm border border-zinc-200 dark:border-zinc-700">
+    <motion.div
+      className="w-full flex justify-between bg-white dark:bg-black p-4 rounded-md shadow-sm border border-zinc-200 dark:border-zinc-700"
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{
+        duration: 0.15,
+      }}
+    >
       <div className="flex gap-2">
         <input
           type="checkbox"
           checked={task.done}
           onChange={() => updateTaskStatus(task)}
         />
-        <span className={task.done ? "line-through opacity-50" : ""}>
+        <span
+          className={`transition-opacity ${
+            task.done ? "line-through opacity-50" : ""
+          }`}
+        >
           {task.content}
         </span>
       </div>
@@ -35,6 +48,6 @@ export default function Card({ task, removeTask, updateTaskStatus }: Props) {
           />
         </svg>
       </button>
-    </div>
+    </motion.div>
   );
 }
