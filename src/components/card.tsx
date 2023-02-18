@@ -7,7 +7,7 @@ interface Props {
 
 export default function Card({ task, removeTask }: Props) {
   return (
-    <div className="w-full flex justify-between bg-white p-4 rounded-md shadow-sm border border-zinc-200">
+    <div className="w-full flex justify-between bg-white dark:bg-zinc-800 p-4 rounded-md shadow-sm border border-zinc-200 dark:border-zinc-700">
       <div className="flex gap-2">
         <input type="checkbox" checked={task.done} onChange={() => {}} />
         <span className={task.done ? "line-through opacity-50" : ""}>

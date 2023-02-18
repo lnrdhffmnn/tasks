@@ -28,7 +28,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-w-full min-h-screen p-10 bg-zinc-100 flex">
+    <div className="min-w-full min-h-screen p-10 bg-zinc-100 dark:bg-zinc-900 text-black dark:text-white flex">
       <div className="flex-grow md:max-w-[800px] mx-auto flex flex-col gap-8 relative">
         <header className="md:text-center">
           <h1 className="text-4xl font-bold">Tasks</h1>
@@ -36,18 +36,18 @@ export default function App() {
         </header>
         <form
           onSubmit={addTask}
-          className="flex flex-col md:flex-row gap-4 sticky top-0 bg-zinc-100 py-4"
+          className="flex flex-col md:flex-row gap-2 sticky top-0 bg-inherit py-4"
         >
           <input
             type="text"
             placeholder="Type something..."
             value={taskContent}
             onChange={event => setTaskContent(event.target.value)}
-            className="w-full px-4 py-2 rounded-md shadow-sm border border-zinc-200 outline-none ring-sky-200 ring-opacity-50 focus:ring focus:border-sky-300"
+            className="w-full px-4 py-2 rounded-md shadow-sm border border-zinc-200 dark:border-zinc-700 outline-none ring-sky-200 dark:ring-sky-400 ring-opacity-50 dark:ring-opacity-25 focus:ring focus:border-sky-300 dark:focus:border-sky-600 bg-inherit"
           />
           <button
             type="submit"
-            className="w-full md:w-fit px-8 py-2 bg-sky-500 text-white font-bold rounded-md shadow-sm border border-zinc-200"
+            className="w-full md:w-fit px-8 py-2 bg-sky-500 dark:bg-sky-600 text-white font-bold rounded-md shadow-sm"
           >
             Add
           </button>
