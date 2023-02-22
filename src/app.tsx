@@ -1,7 +1,8 @@
 import { AnimatePresence } from "framer-motion";
 import { useAtom } from "jotai";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { taskAtom } from "./atoms/task";
+import BackToTop from "./components/back-to-top";
 import Card from "./components/card";
 import { Task } from "./types";
 
@@ -9,11 +10,29 @@ export default function App() {
   const [taskContent, setTaskContent] = useState("");
 
   const [taskList, setTaskList] = useAtom(taskAtom);
+  const [backToTopVisible, setBackToTopVisible] = useState(false);
+
+  const taskContentInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    document.addEventListener("scroll", backToTopListener);
+
+    return () => {
+      document.removeEventListener("scroll", backToTopListener);
+    };
+  }, []);
+
+  function backToTopListener() {
+    setBackToTopVisible(scrollY > 200);
+  }
 
   function addTask(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!taskContent) return;
+    if (!taskContent) {
+      taskContentInputRef.current?.focus();
+      return;
+    }
 
     const task: Task = {
       id: Date.now(),
@@ -42,7 +61,7 @@ export default function App() {
 
   return (
     <div className="min-w-full min-h-screen px-6 py-10 bg-zinc-100 dark:bg-zinc-900 text-black dark:text-white flex">
-      <div className="flex-grow md:max-w-[800px] mx-auto flex flex-col gap-8 relativ bg-inherit">
+      <div className="flex-grow md:max-w-[800px] mx-auto flex flex-col gap-8 relative bg-inherit">
         <header className="md:text-center">
           <h1 className="text-4xl font-bold">Tasks</h1>
           <p>{new Date().toDateString()}</p>
@@ -57,6 +76,7 @@ export default function App() {
             value={taskContent}
             onChange={event => setTaskContent(event.target.value)}
             className="w-full px-4 py-2 rounded-md shadow-sm border border-zinc-200 dark:border-zinc-700 outline-none ring-sky-200 dark:ring-sky-400 ring-opacity-50 dark:ring-opacity-25 focus:ring focus:border-sky-300 dark:focus:border-sky-600 bg-white dark:bg-black"
+            ref={taskContentInputRef}
           />
           <button
             type="submit"
@@ -78,6 +98,7 @@ export default function App() {
           </AnimatePresence>
         </div>
       </div>
+      <AnimatePresence>{backToTopVisible && <BackToTop />}</AnimatePresence>
     </div>
   );
 }
