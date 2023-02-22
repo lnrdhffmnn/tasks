@@ -1,4 +1,4 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { taskAtom } from "./atoms/task";
@@ -10,9 +10,15 @@ export default function App() {
   const [taskContent, setTaskContent] = useState("");
 
   const [taskList, setTaskList] = useAtom(taskAtom);
+  const [removeCompletedTasksVisible, setRemoveCompletedTasksVisible] =
+    useState(false);
   const [backToTopVisible, setBackToTopVisible] = useState(false);
 
   const taskContentInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setRemoveCompletedTasksVisible(taskList.some(task => task.done));
+  });
 
   useEffect(() => {
     document.addEventListener("scroll", backToTopListener);
@@ -59,6 +65,10 @@ export default function App() {
     );
   }
 
+  function removeCompletedTasks() {
+    setTaskList(_taskList => _taskList.filter(task => !task.done));
+  }
+
   return (
     <div className="min-w-full min-h-screen px-6 py-10 bg-zinc-100 dark:bg-zinc-900 text-black dark:text-white flex">
       <div className="flex-grow md:max-w-[800px] mx-auto flex flex-col gap-8 relative bg-inherit">
@@ -97,6 +107,23 @@ export default function App() {
             ))}
           </AnimatePresence>
         </div>
+        <AnimatePresence>
+          {removeCompletedTasksVisible && (
+            <motion.button
+              onClick={removeCompletedTasks}
+              className="w-full md:w-fit px-8 py-2 bg-red-500 dark:bg-red-600 text-white font-bold rounded-md shadow-sm"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{
+                duration: 0.15,
+                ease: "easeInOut",
+              }}
+            >
+              Remove
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
       <AnimatePresence>{backToTopVisible && <BackToTop />}</AnimatePresence>
     </div>
