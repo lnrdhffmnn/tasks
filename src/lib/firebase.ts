@@ -4,6 +4,10 @@ import {
   getAuth,
   setPersistence,
 } from "firebase/auth";
+import {
+  getFirestore,
+  enableMultiTabIndexedDbPersistence,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -18,3 +22,6 @@ const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 setPersistence(auth, browserLocalPersistence);
+
+export const db = getFirestore(app);
+enableMultiTabIndexedDbPersistence(db);

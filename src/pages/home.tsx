@@ -1,22 +1,47 @@
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { AnimatePresence, motion } from "framer-motion";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { taskAtom } from "../atoms/task";
+import { userAtom } from "../atoms/user";
 import Card from "../components/card";
+import { db } from "../lib/firebase";
 import { Task } from "../types";
+import { z } from "zod";
 
 export default function Home() {
   const [taskContent, setTaskContent] = useState("");
-
-  const [taskList, setTaskList] = useAtom(taskAtom);
-  const [removeCompletedTasksVisible, setRemoveCompletedTasksVisible] =
-    useState(false);
+  const [taskList, setTaskList] = useState<z.infer<typeof Task>[]>([]);
+  const [removeCompletedVisible, setRemoveCompletedVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const taskContentInputRef = useRef<HTMLInputElement>(null);
 
+  const user = useAtomValue(userAtom);
+
+  const userDocRef = doc(db, "users", user?.uid!);
+
   useEffect(() => {
-    setRemoveCompletedTasksVisible(taskList.some(task => task.done));
-  });
+    const unsubscribe = onSnapshot(userDocRef, doc =>
+      setTaskList(Task.array().parse(doc.get("tasks")))
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (isLoading) {
+      setIsLoading(false);
+      return;
+    }
+
+    setDoc(userDocRef, {
+      tasks: taskList,
+    });
+  }, [taskList]);
+
+  useEffect(() => {
+    setRemoveCompletedVisible(taskList.some(task => task.completed));
+  }, [taskList]);
 
   function addTask(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -26,24 +51,22 @@ export default function Home() {
       return;
     }
 
-    const task: Task = {
-      id: Date.now(),
+    const task = Task.parse({
       content: taskContent,
-      done: false,
-    };
+    });
     setTaskList(_taskList => [task, ..._taskList]);
     setTaskContent("");
   }
 
-  function removeTask(task: Task) {
+  function removeTask(task: z.infer<typeof Task>) {
     setTaskList(_taskList => _taskList.filter(_task => _task !== task));
   }
 
-  function updateTaskStatus(task: Task) {
+  function updateTaskStatus(task: z.infer<typeof Task>) {
     setTaskList(_taskList =>
       _taskList.map(_task => {
         if (_task === task) {
-          _task.done = !_task.done;
+          _task.completed = !_task.completed;
         }
 
         return _task;
@@ -52,7 +75,7 @@ export default function Home() {
   }
 
   function removeCompletedTasks() {
-    setTaskList(_taskList => _taskList.filter(task => !task.done));
+    setTaskList(_taskList => _taskList.filter(task => !task.completed));
   }
 
   return (
@@ -82,9 +105,9 @@ export default function Home() {
       </form>
       <div className="w-full flex flex-col gap-4">
         <AnimatePresence>
-          {taskList.map(task => (
+          {taskList.map((task, index) => (
             <Card
-              key={task.id}
+              key={index}
               task={task}
               removeTask={removeTask}
               updateTaskStatus={updateTaskStatus}
@@ -93,7 +116,7 @@ export default function Home() {
         </AnimatePresence>
       </div>
       <AnimatePresence>
-        {removeCompletedTasksVisible && (
+        {removeCompletedVisible && (
           <motion.button
             onClick={removeCompletedTasks}
             className="w-full md:w-fit px-8 py-2 bg-red-500 dark:bg-red-600 text-white font-bold rounded-md shadow-sm"

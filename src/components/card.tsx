@@ -1,10 +1,11 @@
 import { Task } from "../types";
 import { motion } from "framer-motion";
+import { z } from "zod";
 
 interface Props {
-  task: Task;
-  removeTask: (task: Task) => void;
-  updateTaskStatus: (task: Task) => void;
+  task: z.infer<typeof Task>;
+  removeTask: (task: z.infer<typeof Task>) => void;
+  updateTaskStatus: (task: z.infer<typeof Task>) => void;
 }
 
 export default function Card({ task, removeTask, updateTaskStatus }: Props) {
@@ -21,12 +22,12 @@ export default function Card({ task, removeTask, updateTaskStatus }: Props) {
       <div className="flex gap-2">
         <input
           type="checkbox"
-          checked={task.done}
+          checked={task.completed}
           onChange={() => updateTaskStatus(task)}
         />
         <span
           className={`transition-opacity ${
-            task.done ? "line-through opacity-50" : ""
+            task.completed ? "line-through opacity-50" : ""
           }`}
         >
           {task.content}
