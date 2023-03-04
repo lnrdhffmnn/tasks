@@ -9,7 +9,7 @@ import Home from "./pages/home";
 import Login from "./pages/login";
 import Logout from "./pages/logout";
 import Protected from "./components/protected";
-import Center from "./components/center";
+import Settings from "./pages/settings";
 
 registerSW({ immediate: true });
 
@@ -24,6 +24,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Home />,
+          },
+          {
+            path: routes.settings.href,
+            element: <Settings />,
           },
         ],
       },

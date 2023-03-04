@@ -3,6 +3,10 @@ export const routes = {
     label: "Home",
     href: "/",
   },
+  settings: {
+    label: "Configurações",
+    href: "/settings",
+  },
   login: {
     label: "Login",
     href: "/login",

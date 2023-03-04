@@ -27,7 +27,7 @@ export default function Login() {
     <Center>
       <button
         onClick={handleLoginWithGoogle}
-        className="bg-sky-700 px-8 py-2 rounded-md shadow-md font-bold hover:bg-sky-600 transition-colors"
+        className="px-8 py-2 bg-sky-500 dark:bg-sky-600 text-white font-bold rounded-md shadow-md hover:bg-sky-600 dark:hover:bg-sky-700 transition-colors"
       >
         Continue with Google
       </button>

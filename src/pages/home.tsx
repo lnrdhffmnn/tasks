@@ -7,6 +7,8 @@ import Card from "../components/card";
 import { db } from "../lib/firebase";
 import { Task } from "../types";
 import { z } from "zod";
+import { Link } from "react-router-dom";
+import { routes } from "../routes";
 
 export default function Home() {
   const [taskContent, setTaskContent] = useState("");
@@ -22,7 +24,7 @@ export default function Home() {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(userDocRef, doc =>
-      setTaskList(Task.array().parse(doc.get("tasks")))
+      setTaskList(Task.array().parse(doc.get("tasks") ?? []))
     );
 
     return () => unsubscribe();
@@ -80,6 +82,17 @@ export default function Home() {
 
   return (
     <>
+      <Link to={routes.settings.href}>
+        <img
+          src={user?.photoURL!}
+          alt={user?.displayName!}
+          width={40}
+          height={40}
+          draggable={false}
+          title={user?.displayName!}
+          className="fixed top-0 right-0 mx-6 my-10 md:m-6 rounded-full"
+        />
+      </Link>
       <header className="md:text-center">
         <h1 className="text-4xl font-bold">Tasks</h1>
         <p>{new Date().toDateString()}</p>
@@ -98,7 +111,7 @@ export default function Home() {
         />
         <button
           type="submit"
-          className="w-full md:w-fit px-8 py-2 bg-sky-500 dark:bg-sky-600 text-white font-bold rounded-md shadow-sm"
+          className="w-full md:w-fit px-8 py-2 bg-sky-500 dark:bg-sky-600 text-white font-bold rounded-md shadow-md hover:bg-sky-600 dark:hover:bg-sky-700 transition-colors"
         >
           Add
         </button>
