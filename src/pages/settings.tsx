@@ -40,7 +40,7 @@ export default function Settings() {
         onClick={handleDeleteUserAccount}
         className="px-8 py-2 bg-red-500 dark:bg-red-600 text-white font-bold rounded-md shadow-md hover:bg-red-600 dark:hover:bg-red-700 transition-colors mt-8"
       >
-        Apagar conta
+        Delete account
       </button>
       <Link
         to={routes.home.href}
