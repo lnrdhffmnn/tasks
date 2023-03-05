@@ -3,10 +3,12 @@ import {
   browserLocalPersistence,
   getAuth,
   setPersistence,
+  connectAuthEmulator,
 } from "firebase/auth";
 import {
   getFirestore,
   enableMultiTabIndexedDbPersistence,
+  connectFirestoreEmulator,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -21,7 +23,12 @@ const firebaseConfig = {
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-setPersistence(auth, browserLocalPersistence);
-
 export const db = getFirestore(app);
-enableMultiTabIndexedDbPersistence(db);
+
+if (import.meta.env.DEV) {
+  connectAuthEmulator(auth, "http://localhost:9099");
+  connectFirestoreEmulator(db, "localhost", 8080);
+} else {
+  setPersistence(auth, browserLocalPersistence);
+  enableMultiTabIndexedDbPersistence(db);
+}
