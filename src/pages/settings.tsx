@@ -6,6 +6,8 @@ import { userAtom } from "../atoms/user";
 import Center from "../components/center";
 import { db } from "../lib/firebase";
 import { routes } from "../routes";
+import userSvg from "../assets/user.svg";
+import UserIcon from "../components/user-icon";
 
 export default function Settings() {
   const user = useAtomValue(userAtom);
@@ -22,13 +24,17 @@ export default function Settings() {
   return (
     <Center>
       <div className="flex items-center justify-center gap-4">
-        <img
-          src={user?.photoURL!}
-          alt={user?.displayName!}
-          width={75}
-          height={75}
-          className="rounded-full shadow-md"
-        />
+        {user?.photoURL ? (
+          <img
+            src={user?.photoURL}
+            alt={user?.displayName!}
+            width={75}
+            height={75}
+            className="rounded-full shadow-md"
+          />
+        ) : (
+          <UserIcon size={75} />
+        )}
         <div>
           <p className="font-bold text-xl">{user?.displayName}</p>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">

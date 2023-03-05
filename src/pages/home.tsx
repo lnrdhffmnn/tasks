@@ -9,6 +9,8 @@ import { Task } from "../types";
 import { z } from "zod";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
+import userSvg from "../assets/user.svg";
+import UserIcon from "../components/user-icon";
 
 export default function Home() {
   const [taskContent, setTaskContent] = useState("");
@@ -82,16 +84,23 @@ export default function Home() {
 
   return (
     <>
-      <Link to={routes.settings.href}>
-        <img
-          src={user?.photoURL!}
-          alt={user?.displayName!}
-          width={40}
-          height={40}
-          draggable={false}
-          title={user?.displayName!}
-          className="fixed top-0 right-0 mx-6 my-10 md:m-6 rounded-full"
-        />
+      <Link
+        to={routes.settings.href}
+        className="fixed top-0 right-0 mx-6 my-10 md:m-6"
+        title={user?.displayName!}
+      >
+        {user?.photoURL ? (
+          <img
+            src={user?.photoURL}
+            alt={user?.displayName!}
+            width={40}
+            height={40}
+            draggable={false}
+            className="rounded-full"
+          />
+        ) : (
+          <UserIcon size={40} />
+        )}
       </Link>
       <header className="md:text-center">
         <h1 className="text-4xl font-bold">Tasks</h1>
