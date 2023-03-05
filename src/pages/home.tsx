@@ -9,7 +9,6 @@ import { Task } from "../types";
 import { z } from "zod";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
-import userSvg from "../assets/user.svg";
 import UserIcon from "../components/user-icon";
 
 export default function Home() {

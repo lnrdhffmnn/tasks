@@ -6,7 +6,6 @@ import { userAtom } from "../atoms/user";
 import Center from "../components/center";
 import { db } from "../lib/firebase";
 import { routes } from "../routes";
-import userSvg from "../assets/user.svg";
 import UserIcon from "../components/user-icon";
 
 export default function Settings() {
